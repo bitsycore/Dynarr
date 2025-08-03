@@ -1,41 +1,57 @@
-#ifndef DWA_DYNARR_H
-#define DWA_DYNARR_H
+#ifndef DYNARR_30F075E42018AC5D_H
+#define DYNARR_30F075E42018AC5D_H
 
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#define DYNARR_STRCONC_(x, y) x##y
-#define DYNARR_STRCONC(x, y) DYNARR_STRCONC_(x, y)
+#define DYNARR___STRCONC___2(x, y) x##y
+#define DYNARR___STRCONC(x, y) DYNARR___STRCONC___2(x, y)
 
-#define DYNARR_PTR(NAME) DYNARR_STRCONC(PTR_, NAME)
-#define DYNARR_NEW(NAME) DYNARR_STRCONC(new_, NAME)
-#define DYNARR_INIT(NAME) DYNARR_STRCONC(init_, NAME)
-#define DYNARR_APPEND(NAME) DYNARR_STRCONC(append_, NAME)
-#define DYNARR_CLEAR(NAME) DYNARR_STRCONC(clear_, NAME)
-#define DYNARR_FREE(NAME) DYNARR_STRCONC(free_, NAME)
-#define DYNARR_DELETE(NAME) DYNARR_STRCONC(delete_, NAME)
-#define DYNARR_GET(NAME) DYNARR_STRCONC(get_, NAME)
-#define DYNARR_SIZE(NAME) DYNARR_STRCONC(size_, NAME)
-#define DYNARR_CAPACITY(NAME) DYNARR_STRCONC(capacity_, NAME)
-#define DYNARR_CONCAT(NAME) DYNARR_STRCONC(concat_, NAME)
-#define DYNARR_RESIZE(NAME) DYNARR_STRCONC(resize_, NAME)
-#define DYNARR_INSERT(NAME) DYNARR_STRCONC(insert_, NAME)
-#define DYNARR_REMOVE(NAME) DYNARR_STRCONC(remove_, NAME)
-#define DYNARR_FIND(NAME) DYNARR_STRCONC(find_, NAME)
+#define DYNARR(NAME) DYNARR___STRCONC(dynarr_, NAME)
 
-#define DYNARR_DEFINE_NAME(T, NAME)                                                 \
-    typedef struct {                                                                \
-        T* data;                                                                    \
-        size_t size;                                                                \
-        size_t capacity;                                                            \
-        bool is_freed;                                                              \
-    } NAME;                                                                         \
-                                                                                    \
-    typedef NAME* DYNARR_PTR(NAME);                                                 \
-                                                                                    \
-    DYNARR_PTR(NAME) DYNARR_NEW(NAME)(size_t initial_capacity) {                    \
+#define DYNARR_New(NAME) DYNARR___STRCONC(new_, NAME)
+#define DYNARR_Init(NAME) DYNARR___STRCONC(init_, NAME)
+#define DYNARR_Append(NAME) DYNARR___STRCONC(append_, NAME)
+#define DYNARR_Clear(NAME) DYNARR___STRCONC(clear_, NAME)
+#define DYNARR_Free(NAME) DYNARR___STRCONC(free_, NAME)
+#define DYNARR_Delete(NAME) DYNARR___STRCONC(delete_, NAME)
+#define DYNARR_Get(NAME) DYNARR___STRCONC(get_, NAME)
+#define DYNARR_Size(NAME) DYNARR___STRCONC(size_, NAME)
+#define DYNARR_Capacity(NAME) DYNARR___STRCONC(capacity_, NAME)
+#define DYNARR_Concat(NAME) DYNARR___STRCONC(concat_, NAME)
+#define DYNARR_Resize(NAME) DYNARR___STRCONC(resize_, NAME)
+#define DYNARR_Insert(NAME) DYNARR___STRCONC(insert_, NAME)
+#define DYNARR_Remove(NAME) DYNARR___STRCONC(remove_, NAME)
+#define DYNARR_Find(NAME) DYNARR___STRCONC(find_, NAME)
+
+#define DYNARR_DECLARE_NAME(T, NAME)                                    \
+                                                                        \
+    typedef struct {                                                    \
+        T* data;                                                        \
+        size_t size;                                                    \
+        size_t capacity;                                                \
+        bool is_freed;                                                  \
+    } NAME;                                                             \
+                                                                        \
+    NAME* DYNARR_New(NAME)(size_t initial_capacity);                    \
+    void DYNARR_Init(NAME)(NAME* array, size_t initial_capacity);       \
+    void DYNARR_Append(NAME)(NAME* array, T value);                     \
+    void DYNARR_Clear(NAME)(NAME* array);                               \
+    void DYNARR_Free(NAME)(NAME* array);                                \
+    void DYNARR_Delete(NAME)(NAME* array);                              \
+    T DYNARR_Get(NAME)(NAME* array, size_t index);                      \
+    size_t DYNARR_Size(NAME)(NAME* array);                              \
+    size_t DYNARR_Capacity(NAME)(NAME* array);                          \
+    void DYNARR_Concat(NAME)(NAME* dest, NAME* src);                    \
+    void DYNARR_Resize(NAME)(NAME* array, size_t new_capacity);         \
+    void DYNARR_Insert(NAME)(NAME* array, size_t index, T value);       \
+    void DYNARR_Remove(NAME)(NAME* array, size_t index);                \
+    int DYNARR_Find(NAME)(NAME* array, T value);                        \
+
+#define DYNARR_IMPLEMENT_NAME(T, NAME)                                              \
+    NAME* DYNARR_New(NAME)(size_t initial_capacity) {                               \
         NAME* array = (NAME*)malloc(sizeof(NAME));                                  \
         if (!array) {                                                               \
             perror("Failed to allocate memory for array structure");                \
@@ -53,7 +69,7 @@
         return array;                                                               \
     }                                                                               \
                                                                                     \
-    void DYNARR_INIT(NAME)(DYNARR_PTR(NAME) array, size_t initial_capacity) {       \
+    void DYNARR_Init(NAME)(NAME* array, size_t initial_capacity) {                  \
         array->data = (T*)malloc(initial_capacity * sizeof(T));                     \
         if (!array->data) {                                                         \
             perror("Failed to allocate memory for array data");                     \
@@ -64,7 +80,7 @@
         array->is_freed = false;                                                    \
     }                                                                               \
                                                                                     \
-    void DYNARR_APPEND(NAME)(DYNARR_PTR(NAME) array, T value) {                     \
+    void DYNARR_Append(NAME)(NAME* array, T value) {                                \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return;                                                                 \
@@ -81,7 +97,7 @@
         array->data[array->size++] = value;                                         \
     }                                                                               \
                                                                                     \
-    void DYNARR_CLEAR(NAME)(DYNARR_PTR(NAME) array) {                               \
+    void DYNARR_Clear(NAME)(NAME* array) {                                          \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return;                                                                 \
@@ -89,7 +105,7 @@
         array->size = 0;                                                            \
     }                                                                               \
                                                                                     \
-    void DYNARR_FREE(NAME)(DYNARR_PTR(NAME) array) {                                \
+    void DYNARR_Free(NAME)(NAME* array) {                                           \
         if (array->is_freed) {                                                      \
             perror("Array has already been freed");                                 \
             return;                                                                 \
@@ -100,12 +116,12 @@
         array->is_freed = true;                                                     \
     }                                                                               \
                                                                                     \
-    void DYNARR_DELETE(NAME)(DYNARR_PTR(NAME) array) {                              \
-        DYNARR_FREE(NAME)(array);                                                   \
+    void DYNARR_Delete(NAME)(NAME* array) {                                         \
+        DYNARR_Free(NAME)(array);                                                   \
         free(array);                                                                \
     }                                                                               \
                                                                                     \
-    T DYNARR_GET(NAME)(DYNARR_PTR(NAME) array, size_t index) {                      \
+    T DYNARR_Get(NAME)(NAME* array, size_t index) {                                 \
         if (index < array->size) {                                                  \
             return array->data[index];                                              \
         } else {                                                                    \
@@ -114,15 +130,15 @@
         }                                                                           \
     }                                                                               \
                                                                                     \
-    size_t DYNARR_SIZE(NAME)(DYNARR_PTR(NAME) array) {                              \
+    size_t DYNARR_Size(NAME)(NAME* array) {                                         \
         return array->size;                                                         \
     }                                                                               \
                                                                                     \
-    size_t DYNARR_CAPACITY(NAME)(DYNARR_PTR(NAME) array) {                          \
+    size_t DYNARR_Capacity(NAME)(NAME* array) {                                     \
         return array->capacity;                                                     \
     }                                                                               \
                                                                                     \
-    void DYNARR_CONCAT(NAME)(DYNARR_PTR(NAME) dest, DYNARR_PTR(NAME) src) {         \
+    void DYNARR_Concat(NAME)(NAME* dest, NAME* src) {                               \
         if (dest->is_freed || src->is_freed) {                                      \
             perror("One of the arrays has been freed");                             \
             return;                                                                 \
@@ -142,7 +158,7 @@
         dest->size = new_size;                                                      \
     }                                                                               \
                                                                                     \
-    void DYNARR_RESIZE(NAME)(DYNARR_PTR(NAME) array, size_t new_capacity) {         \
+    void DYNARR_Resize(NAME)(NAME* array, size_t new_capacity) {                    \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return;                                                                 \
@@ -159,7 +175,7 @@
         }                                                                           \
     }                                                                               \
                                                                                     \
-    void DYNARR_INSERT(NAME)(DYNARR_PTR(NAME) array, size_t index, T value) {       \
+    void DYNARR_Insert(NAME)(NAME* array, size_t index, T value) {                  \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return;                                                                 \
@@ -169,7 +185,7 @@
             return;                                                                 \
         }                                                                           \
         if (array->size == array->capacity) {                                       \
-            DYNARR_RESIZE(NAME)(array, array->capacity * 2);                        \
+            DYNARR_Resize(NAME)(array, array->capacity * 2);                        \
         }                                                                           \
         memmove(&array->data[index + 1], &array->data[index],                       \
                 (array->size - index) * sizeof(T));                                 \
@@ -177,7 +193,7 @@
         array->size++;                                                              \
     }                                                                               \
                                                                                     \
-    void DYNARR_REMOVE(NAME)(DYNARR_PTR(NAME) array, size_t index) {                \
+    void DYNARR_Remove(NAME)(NAME* array, size_t index) {                           \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return;                                                                 \
@@ -191,7 +207,7 @@
         array->size--;                                                              \
     }                                                                               \
                                                                                     \
-    int DYNARR_FIND(NAME)(DYNARR_PTR(NAME) array, T value) {                        \
+    int DYNARR_Find(NAME)(NAME* array, T value) {                                   \
         if (array->is_freed) {                                                      \
             perror("Array has been freed");                                         \
             return -1;                                                              \
@@ -204,6 +220,7 @@
         return -1;                                                                  \
     }
 
-#define DYNARR_DEFINE(T) DYNARR_DEFINE_NAME(T, DYNARR_STRCONC(dynarr_, T))
+#define DYNARR_IMPLEMENT(T) DYNARR_IMPLEMENT_NAME(T, DYNARR(T))
+#define DYNARR_DECLARE(T) DYNARR_DECLARE_NAME(T, DYNARR(T))
 
-#endif //DWA_DYNARR_H
+#endif // DYNARR_30F075E42018AC5D_H

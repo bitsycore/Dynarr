@@ -17,12 +17,14 @@ void printPlayer(const Player player) {
     printf("Player: level=%d, experience=%d, isAlive=%d, isGodMode=%d\n",
            player.level, player.experience, player.isAlive, player.isGodMode);
 }
+DYNARR_DECLARE_NAME(Player, PlayerDynArray)
+DYNARR_IMPLEMENT_NAME(Player, PlayerDynArray)
 
-DYNARR_DEFINE_NAME(Player, PlayerDynArray)
 BLOCKARR_DEFINE_NAME(Player, PlayerBlockArray)
 CHAINARR_DEFINE_NAME(Player, PlayerChainArray)
 
-DYNARR_DEFINE(int)
+DYNARR_DECLARE(int)
+DYNARR_IMPLEMENT(int)
 CHAINARR_DEFINE(int)
 BLOCKARR_DEFINE(int)
 
@@ -31,7 +33,7 @@ int main() {
 
     // Create and populate the first dynamic array
     printf("Creating and populating the first dynamic array:\n");
-    const PTR_PlayerDynArray dynArray1 = new_PlayerDynArray(10);
+    PlayerDynArray* dynArray1 = new_PlayerDynArray(10);
     for (int i = 0; i < 15; ++i) {
         const Player player = { i, rand() % 1000, rand() % 2, rand() % 2 };
         append_PlayerDynArray(dynArray1, player);
@@ -44,7 +46,7 @@ int main() {
 
     // Create and populate the second dynamic array
     printf("\nCreating and populating the second dynamic array:\n");
-    const PTR_PlayerDynArray dynArray2 = new_PlayerDynArray(5);
+    PlayerDynArray* dynArray2 = new_PlayerDynArray(5);
     for (int i = 15; i < 20; ++i) {
         const Player player = { i, rand() % 1000, rand() % 2, rand() % 2 };
         append_PlayerDynArray(dynArray2, player);
@@ -95,7 +97,7 @@ int main() {
     delete_PlayerDynArray(dynArray2);
 
     // Test PlayerDynArray
-    const PTR_PlayerDynArray dynArray = new_PlayerDynArray(10);
+    PlayerDynArray* dynArray = new_PlayerDynArray(10);
     for (int i = 0; i < 20; ++i) {
         const Player player = { i, rand(), rand()%2, rand()%2 };
         append_PlayerDynArray(dynArray, player);
@@ -106,7 +108,7 @@ int main() {
     }
     delete_PlayerDynArray(dynArray);
 
-    // Test PlayerBlockArray"
+    // Test PlayerBlockArray
     PlayerBlockArray* blockArray = new_PlayerBlockArray(10);
     for (int i = 0; i < 20; ++i) {
         const Player player = { i, rand(), rand()%2, rand()%2 };
@@ -131,7 +133,7 @@ int main() {
     delete_PlayerChainArray(chainArray);
 
     // Test int arrays
-    dynarr_int* dynarr_int = new_dynarr_int(10);
+    DYNARR(int)* dynarr_int = new_dynarr_int(10);
     for (int i = 0; i < 20; ++i) {
         append_dynarr_int(dynarr_int, i);
     }
@@ -165,3 +167,4 @@ int main() {
 
     return 0;
 }
+#pragma clang diagnostic pop
